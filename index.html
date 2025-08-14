@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GlamShop • Maquillaje Premium</title>
+  <meta name="description" content="Tienda de maquillaje con tonos rosados, estilo premium, carrito de compras y ofertas."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --pink-50:#fff0f7;/* fondo */
+      --pink-100:#ffd6e8;
+      --pink-200:#ffb3d1;
+      --pink-300:#ff8fb9;
+      --pink-400:#ff6aa3;
+      --pink-500:#ff4d95;/* principal */
+      --pink-600:#e13086;
+      --pink-700:#b3226a;
+      --text:#3c0030;
+      --gold:#f6d27b; /* dorado suave */
+      --gold-2:#e9bf5a;
+      --shadow:0 10px 30px rgba(179,34,106,.15);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:var(--pink-50);color:var(--text)}
+    a{color:inherit}
+
+    /* Header */
+    .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--pink-500),var(--pink-300));color:#fff}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand .logo{width:42px;height:42px;border-radius:50%;background:
+      conic-gradient(from 180deg at 50% 50%, var(--gold) 0 25%, var(--gold-2) 25% 50%, #fff 50% 75%, var(--gold) 75% 100%);
+      box-shadow:inset 0 0 0 3px rgba(255,255,255,.6), 0 6px 18px rgba(0,0,0,.15)}
+    .brand h1{font-family:"Playfair Display",serif;font-size:1.25rem;letter-spacing:.5px;margin:0}
+    .menu{display:flex;gap:18px}
+    .menu a{font-weight:600;text-decoration:none;opacity:.95}
+    .menu a:hover{opacity:1;text-decoration:underline}
+    .actions{display:flex;align-items:center;gap:10px}
+    .btn-cart{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--pink-700);border:none;border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:700;box-shadow:var(--shadow)}
+    .btn-cart:active{transform:translateY(1px)}
+    .cart-count{background:var(--pink-600);color:#fff;border-radius:999px;padding:2px 8px;font-size:.75rem}
+
+    /* Hero */
+    .hero{position:relative;overflow:hidden}
+    .hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;padding:40px 0}
+    .hero h2{font-family:"Playfair Display",serif;font-size:clamp(32px,4.5vw,56px);margin:.2em 0}
+    .hero p{font-size:1.05rem;opacity:.85}
+    .cta{display:flex;gap:12px;margin-top:14px}
+    .btn{border:none;border-radius:999px;padding:12px 18px;font-weight:700;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--pink-500),var(--pink-300));color:#fff;box-shadow:var(--shadow)}
+    .btn-soft{background:#fff;color:var(--pink-700);box-shadow:var(--shadow)}
+
+    .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+
+    /* Badges */
+    .badges{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+    .badge{display:flex;align-items:center;gap:12px;padding:12px 14px}
+    .badge .icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#7a4b00}
+
+    /* Grid productos */
+    .section{padding:48px 0}
+    .section h3{font-family:"Playfair Display",serif;font-size:clamp(26px,3vw,36px);margin:0 0 18px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .product{position:relative;padding:14px}
+    .product img{width:100%;aspect-ratio:1/1;border-radius:14px;object-fit:cover;background:var(--pink-100)}
+    .product h4{margin:10px 0 6px;font-size:1rem}
+    .price{color:var(--pink-700);font-weight:700}
+    .add{margin-top:10px}
+
+    /* Ofertas */
+    .deal{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .deal .panel{padding:22px;display:grid;gap:10px;align-content:center}
+
+    /* Footer */
+    footer{margin-top:36px;background:linear-gradient(90deg,var(--pink-300),var(--pink-500));color:#fff}
+    .foot{display:grid;gap:10px;padding:24px 0}
+    .foot small{opacity:.9}
+
+    /* Carrito (drawer) */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:saturate(140%) blur(2px);display:none;z-index:70}
+    .drawer{position:fixed;top:0;right:0;width:min(420px,96vw);height:100vh;background:#fff;box-shadow:-12px 0 30px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .35s ease;z-index:80;display:grid;grid-template-rows:auto 1fr auto}
+    .drawer.open{transform:translateX(0)}
+    .overlay.show{display:block}
+    .drawer header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #f1d2df}
+    .drawer h4{margin:0;font-size:1.1rem}
+    .cart-items{overflow:auto;padding:12px 18px;display:grid;gap:12px}
+    .cart-item{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;border:1px solid #f5d3e3;border-radius:12px;padding:8px}
+    .cart-item img{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--pink-100)}
+    .qty{display:flex;align-items:center;gap:8px}
+    .qty button{width:28px;height:28px;border-radius:999px;border:none;background:var(--pink-300);color:#57123f;font-weight:800;cursor:pointer}
+    .cart-foot{padding:16px 18px;border-top:1px solid #f1d2df;display:grid;gap:10px}
+    .line{display:flex;align-items:center;justify-content:space-between}
+
+    /* Toast */
+    .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);background:#fff;border:1px solid #f5d3e3;border-radius:999px;padding:10px 16px;box-shadow:var(--shadow);opacity:0;transition:all .35s ease;z-index:100}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* Animaciones */
+    @keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+    .float{animation:float 6s ease-in-out infinite}
+
+    /* Responsive */
+    @media (max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}.deal{grid-template-columns:1fr}}
+    @media (max-width:720px){.hero .wrap{grid-template-columns:1fr}.badges{grid-template-columns:1fr 1fr}.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:460px){.menu{display:none}.badges{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <!-- Topbar / Nav -->
+  <div class="topbar">
+    <div class="container">
+      <div class="nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <h1>GlamShop</h1>
+        </div>
+        <nav class="menu" aria-label="Navegación principal">
+          <a href="#productos">Productos</a>
+          <a href="#ofertas">Ofertas</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+        <div class="actions">
+          <button class="btn-cart" id="btnCart" aria-haspopup="dialog" aria-controls="drawer" aria-expanded="false">
+            🛒 Carrito <span class="cart-count" id="cartCount">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container wrap">
+      <div>
+        <span class="badge card" style="display:inline-flex;align-items:center;gap:10px;padding:8px 12px"><span class="icon">✨</span><b>Nueva colección Primavera</b></span>
+        <h2>Luce espectacular con tonos <span style="background:linear-gradient(90deg,var(--gold),var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent">rosado & dorado</span></h2>
+        <p>Maquillaje de alta calidad, libre de crueldad y hecho para todo tipo de piel. Envíos a todo el país y pago seguro.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#productos">Ver productos</a>
+          <a class="btn btn-soft" href="#ofertas">Ver ofertas</a>
+        </div>
+        <div class="badges">
+          <div class="badge card"><span class="icon">🚚</span><div><b>Envío 24-48h</b><br><small>Gratis desde $120.000</small></div></div>
+          <div class="badge card"><span class="icon">💳</span><div><b>Pagos seguros</b><br><small>PSE • Tarjeta • Contraentrega*</small></div></div>
+          <div class="badge card"><span class="icon">🌿</span><div><b>Libre de crueldad</b><br><small>Ingredientes de calidad</small></div></div>
+        </div>
+      </div>
+      <div class="card" style="padding:16px;display:grid;place-items:center">
+        <img class="float" alt="Paleta de sombras rosadas" src="https://images.unsplash.com/photo-1562887289-e2b96432c2d3?q=80&w=800&auto=format&fit=crop" style="width:100%;border-radius:14px;object-fit:cover"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- Productos -->
+  <section id="productos" class="section">
+    <div class="container">
+      <h3>Productos destacados</h3>
+      <div class="grid" id="productGrid"></div>
+    </div>
+  </section>
+
+  <!-- Ofertas -->
+  <section id="ofertas" class="section">
+    <div class="container">
+      <h3>Ofertas especiales</h3>
+      <div class="deal">
+        <div class="panel card">
+          <h4 style="margin:0">Combo Rosa Glam ✨</h4>
+          <p>Labial + Rubor + Iluminador. Ideal para looks luminosos.</p>
+          <div><del>$120.000</del> <span class="price">$89.900</span></div>
+          <button class="btn btn-primary" onclick="addBundle()">Agregar combo</button>
+        </div>
+        <div class="panel card" style="background:
+          radial-gradient(1200px 400px at -10% 0%, var(--pink-100), transparent),
+          radial-gradient(1200px 400px at 110% 100%, var(--pink-100), transparent),
+          #fff;">
+          <h4 style="margin:0">Envío gratis</h4>
+          <p>En pedidos desde <b>$120.000</b>. Se aplica automáticamente al pagar.</p>
+          <a class="btn btn-soft" href="#productos">Seguir comprando</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contacto">
+    <div class="container foot">
+      <div>
+        <b>GlamShop</b><br>
+        <small>📍 Bogotá, Colombia</small>
+      </div>
+      <div>
+        <small>📞 300 123 4567 • ✉ contacto@glamshop.com</small>
+      </div>
+      <small>© <span id="year"></span> GlamShop. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+
+  <!-- Drawer Carrito -->
+  <div class="overlay" id="overlay" onclick="toggleDrawer(false)"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-label="Carrito de compras" aria-modal="true">
+    <header>
+      <h4>Tu carrito</h4>
+      <button class="btn btn-soft" onclick="clearCart()">Vaciar</button>
+    </header>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="line"><span>Subtotal</span><b id="subtotal">$0</b></div>
+      <div class="line"><span>Envío</span><b id="shipping">$0</b></div>
+      <div class="line" style="font-size:1.15rem"><span>Total</span><b id="total">$0</b></div>
+      <button class="btn btn-primary" onclick="checkout()">Finalizar compra</button>
+    </div>
+  </aside>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Producto agregado al carrito</div>
+
+  <script>
+    // Utilidades de formato
+    const money = v => v.toLocaleString('es-CO');
+
+    // Productos demo (puedes editar o conectar a un backend)
+    const PRODUCTS = [
+      {id:'lip-rose', name:'Labial Rosa Glam', price: 29000, img:'https://images.unsplash.com/photo-1594663653923-d6f5d3d37ffa?q=80&w=800&auto=format&fit=crop'},
+      {id:'palette-rose', name:'Paleta Sombras Rosadas', price: 69000, img:'https://images.unsplash.com/photo-1585386959984-a41552231658?q=80&w=800&auto=format&fit=crop'},
+      {id:'base-soft', name:'Base Líquida Soft Glow', price: 52000, img:'https://images.unsplash.com/photo-1616394584738-fc6e612e71b0?q=80&w=800&auto=format&fit=crop'},
+      {id:'blush-pink', name:'Rubor Pink Dream', price: 34000, img:'https://images.unsplash.com/photo-1590451265722-3842ee46cee6?q=80&w=800&auto=format&fit=crop'},
+      {id:'liner', name:'Delineador Preciso', price: 28000, img:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop'},
+      {id:'mask', name:'Máscara de Pestañas', price: 36000, img:'https://images.unsplash.com/photo-1583267746897-3b59a2f50a8b?q=80&w=800&auto=format&fit=crop'},
+      {id:'highlight', name:'Iluminador Golden Kiss', price: 39000, img:'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=800&auto=format&fit=crop'},
+      {id:'skincare', name:'Serum Hidratante', price: 45000, img:'https://images.unsplash.com/photo-1618477247222-acbdb0e159b3?q=80&w=800&auto=format&fit=crop'}
+    ];
+
+    // Estado del carrito
+    let cart = JSON.parse(localStorage.getItem('glamshop-cart') || '[]');
+    const saveCart = ()=> localStorage.setItem('glamshop-cart', JSON.stringify(cart));
+
+    // Render de productos
+    function renderProducts(){
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      PRODUCTS.forEach(p => {
+        const el = document.createElement('div');
+        el.className = 'product card';
+        el.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <h4>${p.name}</h4>
+          <div class="price">$${money(p.price)}</div>
+          <div class="add"><button class="btn btn-primary" onclick='addToCart("${p.id}")'>Agregar al carrito</button></div>
+        `;
+        grid.appendChild(el);
+      });
+    }
+
+    // Drawer
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+    const btnCart = document.getElementById('btnCart');
+    btnCart.addEventListener('click', ()=> toggleDrawer());
+
+    function toggleDrawer(force){
+      const open = force !== undefined ? force : !drawer.classList.contains('open');
+      drawer.classList.toggle('open', open);
+      overlay.classList.toggle('show', open);
+      btnCart.setAttribute('aria-expanded', open);
+    }
+
+    // Toast
+    let toastTimer;
+    function showToast(msg='Producto agregado al carrito'){
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> t.classList.remove('show'), 2000);
+    }
+
+    // Carrito
+    function addToCart(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      const existing = cart.find(x=>x.id===id);
+      if(existing){ existing.qty += 1; }
+      else { cart.push({id:p.id, name:p.name, price:p.price, img:p.img, qty:1}); }
+      saveCart();
+      renderCart();
+      showToast('Agregado: ' + p.name);
+    }
+
+    function addBundle(){
+      ['lip-rose','blush-pink','highlight'].forEach(addToCart);
+      toggleDrawer(true);
+    }
+
+    function removeItem(id){
+      cart = cart.filter(x=>x.id!==id);
+      saveCart();
+      renderCart();
+    }
+
+    function changeQty(id, delta){
+      const it = cart.find(x=>x.id===id);
+      if(!it) return;
+      it.qty = Math.max(1, it.qty + delta);
+      saveCart();
+      renderCart();
+    }
+
+    function clearCart(){
+      cart = [];
+      saveCart();
+      renderCart();
+    }
+
+    function renderCart(){
+      const box = document.getElementById('cartItems');
+      const count = document.getElementById('cartCount');
+      const subtotalEl = document.getElementById('subtotal');
+      const shippingEl = document.getElementById('shipping');
+      const totalEl = document.getElementById('total');
+
+      box.innerHTML = '';
+      let subtotal = 0, units = 0;
+      cart.forEach(it=>{
+        subtotal += it.price * it.qty;
+        units += it.qty;
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML = `
+          <img src="${it.img}" alt="${it.name}">
+          <div>
+            <div style="font-weight:600">${it.name}</div>
+            <div class="price">$${money(it.price)} x ${it.qty}</div>
+            <div class="qty">
+              <button aria-label="Disminuir" onclick='changeQty("${it.id}",-1)'>−</button>
+              <button aria-label="Aumentar" onclick='changeQty("${it.id}",+1)'>＋</button>
+              <button class="btn btn-soft" style="margin-left:auto" onclick='removeItem("${it.id}")'>Quitar</button>
+            </div>
+          </div>
+          <div style="font-weight:700">$${money(it.price*it.qty)}</div>
+        `;
+        box.appendChild(row);
+      });
+      const shipping = subtotal >= 120000 || subtotal===0 ? 0 : 9900;
+      const total = subtotal + shipping;
+
+      subtotalEl.textContent = '$' + money(subtotal);
+      shippingEl.textContent = '$' + money(shipping);
+      totalEl.textContent = '$' + money(total);
+      count.textContent = units;
+    }
+
+    function checkout(){
+      if(!cart.length){ showToast('Tu carrito está vacío'); return; }
+      const total = document.getElementById('total').textContent;
+      alert('¡Gracias por tu compra! Total: ' + total + '\\n(Integración de pago pendiente)');
+    }
+
+    // Init
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
